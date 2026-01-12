@@ -1,0 +1,13 @@
+name: MobChess
+version: '1.0'
+api-version: '1.21.8'
+authors: [ funayd ]
+main: tk.funayd.mobchess.MobChessPlugin
+bootstrapper: tk.funayd.mobchess.MobChessBootstrap
+
+dependencies:
+  server:
+    MythicMobs:
+      load: BEFORE
+
+
