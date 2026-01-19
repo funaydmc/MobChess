@@ -6,6 +6,11 @@ import org.jetbrains.annotations.NotNull;
 import tk.funayd.mobchess.api.game.GameInstance;
 import tk.funayd.mobchess.api.game.ModuleStopReason;
 
+/**
+ * Event fired when a GameInstance ends.
+ * <p>
+ * Note: {@code @Getter} generates static {@code getHandlerList()} for Bukkit.
+ */
 @Getter
 public class GameEndEvent extends GameEvent {
     private static final HandlerList handlerList = new HandlerList();

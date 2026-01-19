@@ -21,7 +21,6 @@ public final class MobChessPlugin extends JavaPlugin {
     public void onEnable() {
         instance = this;
         CommandAPI.onEnable();
-
     }
 
     @Override

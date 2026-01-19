@@ -34,11 +34,7 @@ public abstract class ModuleHolder<T extends ModuleHolder<T>> extends Runner {
             var module = moduleClass.getConstructor(ModuleHolder.class).newInstance(this);
             addModule(module);
         } catch (
-            NoSuchMethodException | 
-            InstantiationException | 
-            IllegalAccessException | 
-            InvocationTargetException e
-        ) {
+                NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             DebugLogger.warn(
                     "Đăng ký module " + moduleClass.getSimpleName() + " thất bại.",
                     e.getMessage());
@@ -67,12 +63,20 @@ public abstract class ModuleHolder<T extends ModuleHolder<T>> extends Runner {
                 .findFirst();
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * Helper method to cast this instance to type T.
+     * Used to bypass compiler warnings when working with self-referencing generics.
+     */
+    @SuppressWarnings({ "unchecked", "unused" })
     private T getSelf() {
         return (T) this;
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * Helper method to get the runtime class of this holder.
+     * Used for reflection operations with generic types.
+     */
+    @SuppressWarnings({ "unchecked", "unused" })
     private Class<T> getHolderType() {
         return (Class<T>) this.getClass();
     }

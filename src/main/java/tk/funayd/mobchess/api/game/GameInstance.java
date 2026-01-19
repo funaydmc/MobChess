@@ -3,8 +3,8 @@ package tk.funayd.mobchess.api.game;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import tk.funayd.mobchess.MobChessPlugin;
-import tk.funayd.mobchess.api.event.game.GameStartEvent;
 import tk.funayd.mobchess.api.event.game.GameEndEvent;
+import tk.funayd.mobchess.api.event.game.GameStartEvent;
 import tk.funayd.mobchess.misc.log.DebugLogger;
 
 @Getter
@@ -13,6 +13,12 @@ public class GameInstance extends GameLifecycle<GameInstance> {
     private final MobChessPlugin plugin;
     private final GameSetup setup;
     private GameRound activeRound;
+
+    /**
+     * Số lượng round đã được chơi (bắt đầu từ 0, tăng khi mỗi round mới bắt đầu).
+     * Hữu ích cho RoundProvider để quyết định logic tạo round tiếp theo.
+     */
+    private int roundCount = 0;
 
     public GameInstance(MobChessPlugin plugin, String gameId, GameSetup setup) {
         this.plugin = plugin;
@@ -70,7 +76,8 @@ public class GameInstance extends GameLifecycle<GameInstance> {
         }
 
         this.activeRound = nextRound;
-        DebugLogger.info("Bắt đầu Round mới: " + nextRound.getClass().getSimpleName());
+        this.roundCount++;
+        DebugLogger.info("Bắt đầu Round #" + roundCount + ": " + nextRound.getClass().getSimpleName());
 
         activeRound.start();
     }

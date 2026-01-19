@@ -6,6 +6,11 @@ import org.jetbrains.annotations.NotNull;
 import tk.funayd.mobchess.api.game.GamePhase;
 import tk.funayd.mobchess.api.game.ModuleStopReason;
 
+/**
+ * Event fired when a GamePhase ends.
+ * <p>
+ * Note: {@code @Getter} generates static {@code getHandlerList()} for Bukkit.
+ */
 @Getter
 public class PhaseEndEvent extends PhaseEvent {
     private static final HandlerList handlerList = new HandlerList();

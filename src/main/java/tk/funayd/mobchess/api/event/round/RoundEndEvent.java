@@ -6,6 +6,11 @@ import org.jetbrains.annotations.NotNull;
 import tk.funayd.mobchess.api.game.GameRound;
 import tk.funayd.mobchess.api.game.ModuleStopReason;
 
+/**
+ * Event fired when a GameRound ends.
+ * <p>
+ * Note: {@code @Getter} generates static {@code getHandlerList()} for Bukkit.
+ */
 @Getter
 public class RoundEndEvent extends RoundEvent {
     private static final HandlerList handlerList = new HandlerList();

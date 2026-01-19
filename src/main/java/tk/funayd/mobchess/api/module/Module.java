@@ -1,6 +1,7 @@
 package tk.funayd.mobchess.api.module;
 
 import lombok.Getter;
+
 import javax.annotation.Nullable;
 
 @Getter

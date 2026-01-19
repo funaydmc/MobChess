@@ -8,10 +8,16 @@ import tk.funayd.mobchess.api.event.round.RoundStartEvent;
 import tk.funayd.mobchess.misc.log.DebugLogger;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Represents a single round within a GameInstance, containing multiple phases.
+ * <p>
+ * To extend, listen to {@link RoundStartEvent} / {@link RoundEndEvent} instead
+ * of overriding.
+ */
 @Getter
 public class GameRound extends GameLifecycle<GameRound> {
     private final MobChessPlugin plugin;

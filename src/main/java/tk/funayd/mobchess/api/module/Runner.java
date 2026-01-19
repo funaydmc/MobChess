@@ -10,31 +10,33 @@ public abstract class Runner {
     private boolean running = false;
 
     protected abstract void onEnable() throws Exception;
+
     protected abstract void onDisable(ModuleStopReason reason) throws Exception;
 
     public final void enable() {
-        if (running) return;
+        if (running)
+            return;
+        running = true; // Set trước để disable() có thể cleanup nếu onEnable() fail
         try {
             onEnable();
-            running = true;
         } catch (Exception e) {
             DebugLogger.error(
                     "Lỗi khi bật module",
-                    e.getMessage()
-            );
+                    e.getMessage());
             disable(ModuleStopReason.ERROR);
         }
     }
+
     public final void disable(ModuleStopReason reason) {
-        if (!running) return;
+        if (!running)
+            return;
         running = false;
         try {
             onDisable(reason);
         } catch (Exception e) {
             DebugLogger.error(
                     "Lỗi khi tắt module",
-                    e.getMessage()
-            );
+                    e.getMessage());
         }
     }
 
