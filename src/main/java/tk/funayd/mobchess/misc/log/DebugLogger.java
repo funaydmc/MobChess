@@ -16,12 +16,14 @@ public class DebugLogger {
     }
 
     public static void enable(CommandSender sender) {
-        if (isListening(sender)) return;
+        if (isListening(sender))
+            return;
         audiences.add(sender);
     }
 
     public static void disable(CommandSender sender) {
-        if (!isListening(sender)) return;
+        if (!isListening(sender))
+            return;
         audiences.remove(sender);
     }
 
@@ -50,10 +52,11 @@ public class DebugLogger {
     }
 
     public static void log(TextColor color, String... message) {
-        if (audiences.isEmpty()) return;
+        if (audiences.isEmpty())
+            return;
         String callerClassName = StackWalker.getInstance()
                 .walk(frames -> frames
-                        .skip(1)
+                        .dropWhile(f -> f.getClassName().equals(DebugLogger.class.getName()))
                         .findFirst()
                         .map(f -> {
                             String fullClassName = f.getClassName();

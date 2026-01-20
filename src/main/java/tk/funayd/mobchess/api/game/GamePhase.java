@@ -16,17 +16,22 @@ import tk.funayd.mobchess.api.event.phase.PhaseStartEvent;
  * Supports pause/resume, skip, and remaining time tracking.
  */
 @Getter
-public class GamePhase extends GameLifecycle<GamePhase> {
+public final class GamePhase extends GameLifecycle<GamePhase> {
     private final MobChessPlugin plugin;
     private final GameRound round;
-    private final Metadata metadata;
+    private final PhaseMetadata metadata;
 
     // Timer state
     private BukkitTask timerTask = null;
+    /**
+     * -- GETTER --
+     *  Get remaining ticks until phase auto-completes.
+     *  Returns 0 if no timeout or phase has ended.
+     */
     private long remainingTicks = 0;
     private boolean paused = false;
 
-    public GamePhase(GameRound gameRound, Metadata metadata) {
+    public GamePhase(GameRound gameRound, PhaseMetadata metadata) {
         this.round = gameRound;
         this.metadata = metadata;
         this.plugin = gameRound.getPlugin();
@@ -39,28 +44,7 @@ public class GamePhase extends GameLifecycle<GamePhase> {
         return round.getGame();
     }
 
-    public record Metadata(
-            String name, // Tên hiển thị của phase
-            long timeout // Thời gian tối đa của phase (ticks). 0 = vô hạn.
-    ) {
-    }
-
     // ==================== Timer API ====================
-
-    /**
-     * Get remaining ticks until phase auto-completes.
-     * Returns 0 if no timeout or phase has ended.
-     */
-    public long getRemainingTicks() {
-        return remainingTicks;
-    }
-
-    /**
-     * Check if the phase timer is paused.
-     */
-    public boolean isPaused() {
-        return paused;
-    }
 
     /**
      * Pause the phase timer. The phase will not auto-complete while paused.
@@ -97,8 +81,8 @@ public class GamePhase extends GameLifecycle<GamePhase> {
     // ==================== Lifecycle ====================
 
     @Override
-    protected final void onStart() {
-        long timeout = metadata.timeout();
+    protected void onStart() {
+        long timeout = metadata.getTimeout();
         if (timeout > 0) {
             remainingTicks = timeout;
             startTimer(timeout);
@@ -107,7 +91,7 @@ public class GamePhase extends GameLifecycle<GamePhase> {
     }
 
     @Override
-    protected final void onStop(ModuleStopReason reason) {
+    protected void onStop(ModuleStopReason reason) {
         cancelTimer();
         remainingTicks = 0;
         paused = false;
@@ -120,7 +104,7 @@ public class GamePhase extends GameLifecycle<GamePhase> {
         }
     }
 
-    protected void cleanup() {
+    private void cleanup() {
         // Cleanup logic for subclasses
     }
 

@@ -19,20 +19,19 @@ import java.util.List;
  * of overriding.
  */
 @Getter
-public class GameRound extends GameLifecycle<GameRound> {
+public final class GameRound extends GameLifecycle<GameRound> {
     private final MobChessPlugin plugin;
     private final GameInstance game;
-    private final List<GamePhase> phaseList;
+    private final List<GamePhase> phaseList = new ArrayList<>();
     private final Deque<GamePhase> phaseQueue = new LinkedList<>();
     private GamePhase activePhase = null;
 
-    public GameRound(GameInstance gameInstance, List<GamePhase> phases) {
+    public GameRound(GameInstance gameInstance) {
         this.game = gameInstance;
-        this.phaseList = new ArrayList<>(phases);
         this.plugin = gameInstance.getPlugin();
     }
 
-    final void nextPhase() {
+    void nextPhase() {
         activePhase = phaseQueue.poll();
         if (activePhase != null) {
             activePhase.start();
@@ -42,7 +41,7 @@ public class GameRound extends GameLifecycle<GameRound> {
     }
 
     @Override
-    protected final void onStart() {
+    protected void onStart() {
         phaseQueue.clear();
         phaseQueue.addAll(phaseList);
         Bukkit.getPluginManager().callEvent(new RoundStartEvent(this));
@@ -55,7 +54,7 @@ public class GameRound extends GameLifecycle<GameRound> {
     }
 
     @Override
-    protected final void onStop(ModuleStopReason reason) {
+    protected void onStop(ModuleStopReason reason) {
         phaseQueue.clear();
         if (activePhase != null) {
             activePhase.stop(reason);
@@ -69,7 +68,7 @@ public class GameRound extends GameLifecycle<GameRound> {
         }
     }
 
-    protected void cleanup() {
+    private void cleanup() {
         // Cleanup logic
     }
 }

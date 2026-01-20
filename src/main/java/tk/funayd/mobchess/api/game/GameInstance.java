@@ -8,7 +8,7 @@ import tk.funayd.mobchess.api.event.game.GameStartEvent;
 import tk.funayd.mobchess.misc.log.DebugLogger;
 
 @Getter
-public class GameInstance extends GameLifecycle<GameInstance> {
+public final class GameInstance extends GameLifecycle<GameInstance> {
     private final String gameId;
     private final MobChessPlugin plugin;
     private final GameSetup setup;
@@ -31,7 +31,7 @@ public class GameInstance extends GameLifecycle<GameInstance> {
     }
 
     @Override
-    protected final void onStart() {
+    protected void onStart() {
         DebugLogger.info("GameInstance " + gameId + " khởi động...");
 
         // Register all modules from setup
@@ -42,7 +42,7 @@ public class GameInstance extends GameLifecycle<GameInstance> {
     }
 
     @Override
-    protected final void onStop(ModuleStopReason reason) {
+    protected void onStop(ModuleStopReason reason) {
         if (activeRound != null) {
             activeRound.stop(reason);
             activeRound = null;
@@ -52,7 +52,7 @@ public class GameInstance extends GameLifecycle<GameInstance> {
         DebugLogger.info("GameInstance " + gameId + " đã dừng. Lý do: " + reason);
     }
 
-    final void onRoundComplete() {
+    void onRoundComplete() {
         if (!isRunning())
             return;
         Bukkit.getScheduler().runTask(plugin, this::nextRound);
@@ -82,7 +82,7 @@ public class GameInstance extends GameLifecycle<GameInstance> {
         activeRound.start();
     }
 
-    protected void cleanup() {
+    private void cleanup() {
         // Cleanup logic
     }
 }

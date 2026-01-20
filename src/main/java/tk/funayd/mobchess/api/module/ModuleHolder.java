@@ -3,8 +3,10 @@ package tk.funayd.mobchess.api.module;
 import tk.funayd.mobchess.api.game.ModuleStopReason;
 import tk.funayd.mobchess.misc.log.DebugLogger;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +33,8 @@ public abstract class ModuleHolder<T extends ModuleHolder<T>> extends Runner {
             return;
         }
         try {
-            var module = moduleClass.getConstructor(ModuleHolder.class).newInstance(this);
+            var constructor = findCompatibleConstructor(moduleClass);
+            var module = constructor.newInstance(this);
             addModule(module);
         } catch (
                 NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
@@ -39,6 +42,18 @@ public abstract class ModuleHolder<T extends ModuleHolder<T>> extends Runner {
                     "Đăng ký module " + moduleClass.getSimpleName() + " thất bại.",
                     e.getMessage());
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private <M extends Module<T>> Constructor<M> findCompatibleConstructor(Class<M> moduleClass)
+            throws NoSuchMethodException {
+        return (Constructor<M>) Arrays.stream(moduleClass.getDeclaredConstructors())
+                .filter(c -> c.getParameterCount() == 1)
+                .filter(c -> c.getParameterTypes()[0].isAssignableFrom(this.getClass()))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchMethodException(
+                        "No compatible constructor found for " + moduleClass.getName() + " accepting "
+                                + this.getClass().getName()));
     }
 
     public <M extends Module<?>> void removeModule(M module) {

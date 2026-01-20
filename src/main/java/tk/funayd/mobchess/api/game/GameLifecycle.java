@@ -39,15 +39,18 @@ public abstract class GameLifecycle<T extends GameLifecycle<T>> extends ModuleHo
 
     @Override
     public final void onDisable(ModuleStopReason reason) {
-        onStop(reason);
-        super.onDisable(reason);
+        try {
+            super.onDisable(reason);
+        } finally {
+            onStop(reason);
+        }
     }
 
     public final void start() {
         enable();
     }
 
-    protected final void stop(ModuleStopReason moduleStopReason) {
+    public final void stop(ModuleStopReason moduleStopReason) {
         disable(moduleStopReason);
     }
 }
